@@ -1,4 +1,4 @@
-use std::{alloc::System, fs::File, io::{BufRead, BufReader}, path::Path, str::Lines, vec};
+use std::{fs::File, io::{BufRead, BufReader}, vec};
 
 use galeshapely::matching::Matching;
 
@@ -12,10 +12,9 @@ struct Driver{
  // Make the matching module public
 
 impl Driver {
-    fn main_driver(&self){
-        if (self.testBF){
-            
-        }
+    pub fn run(&self){
+        let problem = Self::parse_matching_problem(Self::lines_from_file(&self));
+        Self::test_run(&self, problem);
     }
     fn parse_matching_problem_with_example(input_file : Vec<String>) -> galeshapely::matching::Matching{
         let m : usize;
@@ -78,43 +77,53 @@ impl Driver {
         }
         return pos;
     }
-    fn lines_from_file(filename: impl AsRef<Path>) -> Vec<String> {
-        let file = File::open(filename).expect("no such file");
+    fn lines_from_file(&self) -> Vec<String> {
+        let file = File::open(&self.filename).expect("no such file");
         let buf = BufReader::new(file);
         buf.lines()
             .map(|l| l.expect("Could not parse line"))
             .collect()
     }
     fn test_run(&self,problem: galeshapely::matching::Matching){
-        let is_stable : bool;
+        let is_stable_c : bool;
+        let is_stable_i : bool;
         if self.testGS_c == true {
-            let gsmatching = galeshapely::stable_matching_uni_opt(problem);
+            let gsmatching = galeshapely::stable_matching_uni_opt(&problem);
             //println!(GSMatching);
             let matching = gsmatching.stud_match.clone();
-            is_stable = galeshapely::is_stable_matching(gsmatching);
-            println!("Is stable {is_stable}");
+            is_stable_c = galeshapely::is_stable_matching(gsmatching);
+            println!("Is stable {is_stable_c}");
             for (stud,item) in matching.clone().into_iter().enumerate(){
-                println!("Student {stud} Uni {item}");
+                println!("Student {stud} University {item}");
+            }
+        }
+        if self.testGS_i == true {
+            let gsmatching = galeshapely::stable_matching_stud_opt(&problem);
+            //println!(GSMatching);
+            let matching = gsmatching.stud_match.clone();
+            is_stable_i = galeshapely::is_stable_matching(gsmatching);
+            println!("Is stable {is_stable_i}");
+            for (stud,item) in matching.clone().into_iter().enumerate(){
+                println!("Student {stud} University {item}");
             }
         }
         
 
+
     }
+    
     
 
     
 }
 
-fn main() {
-    let filename = "src/inputs/1-8-8.in".to_owned();
+fn main() { 
+    let filename = "src/inputs/100-500-250.in".to_owned();
     let drvr = Driver{
         filename,
         testGS_c: true,
-        testGS_i : false,
+        testGS_i : true,
         testBF : false
     };
-    println!("Hello, world!");
-    let file = Driver::lines_from_file("src/inputs/1-8-8.in");
-    let problem  = Driver::parse_matching_problem(file);
-    drvr.test_run(problem);
-}   
+    drvr.run();    
+}    

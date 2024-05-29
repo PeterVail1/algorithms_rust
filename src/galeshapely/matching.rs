@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Matching {
     pub m : usize,
     pub n : usize,
