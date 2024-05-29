@@ -85,7 +85,7 @@ pub fn is_stable_matching(problem : matching::Matching) -> bool {
         }
     }
     pub fn stable_matching_stud_opt(problem : &matching::Matching) -> matching::Matching {
-        let mut avail_uni = problem.total_uni_pos();
+        //let avail_uni = problem.total_uni_pos();
         let mut uni_pos = problem.uni_pos.clone();
         let mut rem_stud = problem.n;
         let uni_cnt = problem.m;

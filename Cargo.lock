@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "testrust"
+name = "algorithms_rust"
 version = "0.1.0"
